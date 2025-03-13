@@ -24,7 +24,7 @@ class CategoryController extends Controller
     }
 
     public function store(Request $request) {
-        
+
         $data = $request->validate([
             'name' => 'required|string|max:255', // Pastikan input valid
         ]);
@@ -33,7 +33,6 @@ class CategoryController extends Controller
 
         return redirect()->route('categories.index')->with('success', 'Data berhasil disimpan');
     }
-
 
     public function edit($id) {
         $category = $this->categoryRepository->edit($id);
