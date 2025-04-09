@@ -3,21 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Repositories\BookRepositoryInterface;
-use App\Repositories\CategoryRepositoryInterface;
-use App\Models\Book;
-
+use App\Repositories\BukuRepository;
+use App\Repositories\CategoryRepository;
 
 class BookController extends Controller
 {
-
-    private $bookRepository;
+    private $bukuRepository;
     private $categoryRepository;
 
-    public function __construct(BookRepositoryInterface $bookRepository, CategoryRepositoryInterface $categoryRepository)
-    {
-        $this->bookRepository = $bookRepository ;
-        $this->categoryRepository = $categoryRepository ;
+    // Memperbaiki konstruktor untuk menginjeksi semua dependensi yang dibutuhkan
+    public function __construct(
+        BukuRepository $bukuRepository,
+        CategoryRepository $categoryRepository
+    ) {
+        // Menginisialisasi variabel dengan dependensi yang diterima
+        $this->bukuRepository = $bukuRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -25,7 +26,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = $this->bookRepository->getAll();
+        // Menggunakan BukuReadRepositoryInterface untuk mengambil data buku
+        $books = $this->bukuRepository->getAll();
         return view('buku.index', compact('books'));
     }
 
@@ -34,6 +36,7 @@ class BookController extends Controller
      */
     public function create()
     {
+        // Mengambil semua kategori menggunakan CategoryReadRepositoryInterface
         $categories = $this->categoryRepository->getAll();
         return view('buku.create', compact('categories'));
     }
@@ -43,6 +46,7 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi data yang diterima dari form
         $data = $request->validate([
             'judul' => 'required',
             'penulis' => 'required',
@@ -50,18 +54,21 @@ class BookController extends Controller
             'category_id' => 'required',
         ]);
 
-        $this->bookRepository->store($data);
+        // Menggunakan BukuWriteRepositoryInterface untuk menyimpan data buku
+        $this->bukuRepository->store($data);
         return redirect()->route('buku.index')->with('success', 'Data berhasil disimpan');
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)
     {
-        $book =  $this->bookRepository->getById($id);
+        // Mengambil buku berdasarkan ID menggunakan BukuReadRepositoryInterface
+        $book = $this->bukuRepository->getById($id);
+        // Mengambil kategori menggunakan CategoryReadRepositoryInterface
         $categories = $this->categoryRepository->getAll();
-        return view ('buku.edit', compact ('book' , 'categories'));
+        return view('buku.edit', compact('book', 'categories'));
     }
 
     /**
@@ -69,6 +76,7 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Validasi data yang diterima dari form
         $data = $request->validate([
             'judul' => 'required',
             'penulis' => 'required',
@@ -76,7 +84,8 @@ class BookController extends Controller
             'category_id' => 'required',
         ]);
 
-        $this->bookRepository->update($id, $data);
+        // Menggunakan BukuWriteRepositoryInterface untuk mengupdate data buku
+        $this->bukuRepository->update($id, $data);
         return redirect()->route('buku.index')->with('success', 'Data berhasil diupdate');
     }
 
@@ -85,7 +94,8 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
-        $this->bookRepository->delete($id);
+        // Menggunakan BukuWriteRepositoryInterface untuk menghapus data buku
+        $this->bukuRepository->delete($id);
         return redirect()->route('buku.index')->with('success', 'Data berhasil dihapus');
     }
 }
