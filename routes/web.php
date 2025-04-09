@@ -27,10 +27,10 @@ Route::put('/buku/{id}', [BookController::class, 'update'])->name('buku.update')
 Route::delete('/buku/{id}', [BookController::class, 'destroy'])->name('buku.destroy');
 
 Route::prefix('categories')->name('categories.')->group(function () {
-    Route::get('/', [CategoryController::class, 'index'])->name('index'); // Tanpa '/categories'
-    Route::get('/create', [CategoryController::class, 'create'])->name('create'); // Gunakan get, bukan create()
-    Route::post('/', [CategoryController::class, 'store'])->name('store'); // Tanpa '/categories'
-    Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit'); // Tanpa '/categories'
-    Route::put('/{id}', [CategoryController::class, 'update'])->name('update'); // Tanpa '/categories'
-    Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy'); // Tanpa '/categories'
+    Route::get('/', [CategoryController::class, 'index'])->name('index');
+    Route::get('/create', [CategoryController::class, 'create'])->name('create'); 
+    Route::post('/', [CategoryController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [CategoryController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [CategoryController::class, 'update'])->name('update');
+    Route::delete('/{id}', [CategoryController::class, 'destroy'])->name('destroy');
 });
